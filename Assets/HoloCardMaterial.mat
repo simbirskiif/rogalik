@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HoloCardMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 38633ebe6bebacb40a5349f509894ddb, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: bcce01f053e6f4543b2ff87c43b73aba, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -46,6 +46,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GradientAtlas:
+        m_Texture: {fileID: 2800000, guid: dc7bd0110063a664c9f3839039dc9900, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -101,10 +105,13 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Fresnel_Power: 0.61
+    - _Fresnel_Power: 0.65
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Gradient_Row: 0
+    - _Gradient_Row_1: 0
+    - _Gradient_Row_2: 0
     - _Holo_Intensity: 1
     - _Holo_Tilling: 2
     - _Metallic: 0
@@ -113,12 +120,16 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Row_Effect_1: 4
+    - _Row_Effect_2: 3
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _TotalRows: 256
+    - _Total_Rows: 256
     - _Transition_Power: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
