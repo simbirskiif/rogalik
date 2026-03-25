@@ -27,12 +27,9 @@ public class TouchController : MonoBehaviour
             HandleDrag();
         }
 
-        else if (Input.GetMouseButtonUp(0) && _current != null)
+        else if (Input.GetMouseButtonUp(0) && _first != null)
         {
-            _current.OnRelease();
-            _current = null;
-            _last = null;
-            _first = null;
+            HandleDrop();
         }
     }
 
@@ -60,7 +57,23 @@ public class TouchController : MonoBehaviour
                 _current.OnEnterZone();
                 return;
             }
+
             _current.OnDrag(hit.point);
         }
+    }
+
+    private void HandleDrop()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Vector3 dropPoint = Vector3.zero;
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _layerMask))
+        {
+            dropPoint = hit.point;
+        }
+
+        _first.OnRelease(dropPoint, _current);
+        _current = null;
+        _last = null;
+        _first = null;
     }
 }

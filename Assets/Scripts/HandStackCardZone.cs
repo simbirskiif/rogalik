@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Interfaces;
 using UnityEngine;
 
 public class HandStackCardZone : CardZone
@@ -47,7 +48,7 @@ public class HandStackCardZone : CardZone
         Debug.Log(worldPosition);
     }
 
-    public override void OnRelease()
+    public override void OnRelease(Vector3 point, IClickable3D clickable)
     {
         Debug.Log("Release");
     }

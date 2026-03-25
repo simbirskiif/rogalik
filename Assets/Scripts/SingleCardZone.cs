@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Interfaces;
+using UnityEngine;
 
 public class SingleCardZone : CardZone
 {
@@ -29,7 +30,7 @@ public class SingleCardZone : CardZone
         throw new System.NotImplementedException();
     }
 
-    public override void OnRelease()
+    public override void OnRelease(Vector3 point, IClickable3D clickable)
     {
         throw new System.NotImplementedException();
     }
