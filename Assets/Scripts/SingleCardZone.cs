@@ -18,4 +18,29 @@ public class SingleCardZone : CardZone
     {
         _thisCard = null;
     }
+
+    public override void OnClick(Vector3 worldPosition)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void OnDrag(Vector3 worldPosition)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void OnRelease()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void OnExitZone()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void OnEnterZone()
+    {
+        throw new System.NotImplementedException();
+    }
 }

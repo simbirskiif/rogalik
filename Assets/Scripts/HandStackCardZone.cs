@@ -15,10 +15,7 @@ public class HandStackCardZone : CardZone
         xStart = transform.position.x - transform.lossyScale.x / 2;
         xEnd = transform.position.x + transform.lossyScale.x / 2;
     }
-
-    private void calcXPosition()
-    {
-    }
+    
 
     public override Transform GetTransformForCard(CardEntity card)
     {
@@ -38,6 +35,31 @@ public class HandStackCardZone : CardZone
         _cards.Remove(card);
         Recalculate();
         ResetPosition();
+    }
+
+    public override void OnClick(Vector3 worldPosition)
+    {
+        Debug.Log(worldPosition);
+    }
+
+    public override void OnDrag(Vector3 worldPosition)
+    {
+        Debug.Log(worldPosition);
+    }
+
+    public override void OnRelease()
+    {
+        Debug.Log("Release");
+    }
+
+    public override void OnExitZone()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void OnEnterZone()
+    {
+        throw new NotImplementedException();
     }
 
     public void InjectCard(int index)
