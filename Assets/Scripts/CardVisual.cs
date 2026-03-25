@@ -1,14 +1,15 @@
+using Entity;
 using UnityEngine;
 
-public class CardConfig : MonoBehaviour
+[ExecuteInEditMode]
+public class CardVisual : MonoBehaviour
 {
-    [Header("Gradient values")]
-    [SerializeField] float rowEffect1;
+    [Header("Gradient values")] [SerializeField]
+    float rowEffect1;
+
     [SerializeField] float rowEffect2;
-    [Header("")]
-    [SerializeField] float frenselPower = 0.65f;
-    [Header("")]
-    [SerializeField] float holoTilling = 2f;
+    [Header("")] [SerializeField] float frenselPower = 0.65f;
+    [Header("")] [SerializeField] float holoTilling = 2f;
     [SerializeField] float holoIntensity = 1f;
     [SerializeField] float transitionPower = 1f;
 
@@ -20,20 +21,21 @@ public class CardConfig : MonoBehaviour
         cardRenderer = GetComponent<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
 
-        setUpdated();
+        updateShader();
     }
 
-    void Update()
+    public void setUpdated(CardConfig visual)
     {
-        
+        rowEffect1 = visual.RowEffect1;
+        rowEffect2 = visual.RowEffect2;
+        transitionPower = visual.TransitionPower;
+        holoIntensity = visual.HoloIntensity;
+        holoTilling = visual.HoloTilling;
+        frenselPower = visual.FrenselPower;
+        updateShader();
     }
 
-    private void Awake()
-    {
-        
-    }
-
-    public void setUpdated()
+    private void updateShader()
     {
         cardRenderer.GetPropertyBlock(propertyBlock);
 
