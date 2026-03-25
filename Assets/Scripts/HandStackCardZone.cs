@@ -18,7 +18,6 @@ public class HandStackCardZone : CardZone
 
     private void calcXPosition()
     {
-        
     }
 
     public override Transform GetTransformForCard(CardEntity card)
@@ -36,7 +35,16 @@ public class HandStackCardZone : CardZone
 
     public override void InjectCard(CardEntity card)
     {
-        // throw new System.NotImplementedException(); 
+        _cards.Remove(card);
+        Recalculate();
+        ResetPosition();
+    }
+
+    public void InjectCard(int index)
+    {
+        _cards.RemoveAt(index);
+        Recalculate();
+        ResetPosition();
     }
 
     private void Recalculate()
@@ -45,14 +53,15 @@ public class HandStackCardZone : CardZone
         {
             Destroy(child.gameObject);
         }
+
         _targets.Clear();
 
         for (int i = 0; i < _cards.Count; i++)
         {
             var target = Instantiate(targetPrefab, transform);
             target.transform.localScale = Vector3.one;
-            float step = _cards.Count > 1 ?  (float)(xEnd - xStart) / (_cards.Count - 1) : 0;
-            float xPos = xStart + i * step;
+            float step = _cards.Count > 1 ? (xEnd - xStart) / (_cards.Count - 1) : transform.position.x;
+            float xPos = _cards.Count > 1 ? xStart + i * step : transform.position.x;
             target.transform.position = new Vector3(xPos, transform.position.y,
                 transform.position.z);
             _targets.Add(target);
