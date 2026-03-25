@@ -17,6 +17,7 @@ public abstract class CardZone : MonoBehaviour, IClickable3D
     //Implements
     public abstract void OnClick(Vector3 worldPosition);
     public abstract void OnDrag(Vector3 worldPosition);
+    public abstract void OnHover(Vector3 worldPosition);
 
     public virtual void OnRelease(Vector3 point, IClickable3D clickable)
     {

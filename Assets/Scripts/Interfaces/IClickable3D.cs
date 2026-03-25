@@ -8,6 +8,7 @@ namespace Interfaces
     {
         void OnClick(Vector3 worldPosition);
         void OnDrag(Vector3 worldPosition);
+        void OnHover(Vector3 worldPosition);
         void OnRelease(Vector3 point, IClickable3D clickable);
         void OnExitZone();
         void OnEnterZone();

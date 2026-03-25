@@ -38,9 +38,9 @@ public class TouchController : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _layerMask))
         {
-            _current.OnClick(hit.point);
-            _first = _current;
             _current = hit.collider.GetComponent<IClickable3D>();
+            _first = _current;
+            _current.OnClick(hit.point);
         }
     }
 
@@ -49,16 +49,23 @@ public class TouchController : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _layerMask))
         {
+            var thisHit = hit.collider.GetComponent<IClickable3D>();
             if (_current != hit.collider.GetComponent<IClickable3D>())
             {
                 _last = _current;
                 _current = hit.collider.GetComponent<IClickable3D>();
                 _last.OnExitZone();
                 _current.OnEnterZone();
-                return;
             }
 
-            _current.OnDrag(hit.point);
+            if (_current == _first)
+            {
+                _first.OnDrag(hit.point);
+            }
+            if (_current != _last && _current != _first && _current != null)
+            {
+                _current.OnHover(hit.point);
+            }
         }
     }
 

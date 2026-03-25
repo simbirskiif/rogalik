@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 125872159}
   - component: {fileID: 125872158}
   - component: {fileID: 125872162}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HandStack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -389,6 +389,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b4f642282a648259ac4f875960c7f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TouchController
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!4 &294861082
 Transform:
   m_ObjectHideFlags: 0

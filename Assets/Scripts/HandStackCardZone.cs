@@ -48,6 +48,11 @@ public class HandStackCardZone : CardZone
         Debug.Log(worldPosition);
     }
 
+    public override void OnHover(Vector3 worldPosition)
+    {
+        throw new NotImplementedException();
+    }
+
     public override void OnRelease(Vector3 point, IClickable3D clickable)
     {
         Debug.Log("Release");

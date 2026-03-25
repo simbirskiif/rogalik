@@ -30,6 +30,11 @@ public class SingleCardZone : CardZone
         throw new System.NotImplementedException();
     }
 
+    public override void OnHover(Vector3 worldPosition)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnRelease(Vector3 point, IClickable3D clickable)
     {
         throw new System.NotImplementedException();
