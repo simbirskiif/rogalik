@@ -1,4 +1,5 @@
 using Entity;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -34,7 +35,7 @@ public class CardVisual : MonoBehaviour
         frenselPower = visual.FrenselPower;
         updateShader();
     }
-
+    [ContextMenu("Обновить Shader")]
     private void updateShader()
     {
         cardRenderer.GetPropertyBlock(propertyBlock);

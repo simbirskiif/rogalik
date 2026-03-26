@@ -10,6 +10,8 @@ public class HandStackCardZone : CardZone
     [SerializeField] List<GameObject> _targets = new();
     [SerializeField] private float xStart;
     [SerializeField] private float xEnd;
+    
+    [SerializeField]private bool _inDrag = false;
 
     private void Start()
     {
@@ -45,6 +47,7 @@ public class HandStackCardZone : CardZone
 
     public override void OnDrag(Vector3 worldPosition)
     {
+        _inDrag = true;
         Debug.Log(worldPosition);
     }
 
@@ -55,17 +58,20 @@ public class HandStackCardZone : CardZone
 
     public override void OnRelease(Vector3 point, IClickable3D clickable)
     {
+        _inDrag = false;
+        Recalculate();
+        ResetPosition();
         Debug.Log("Release");
     }
 
     public override void OnExitZone()
     {
-        throw new NotImplementedException();
+        Debug.Log("ExitZone");
     }
 
     public override void OnEnterZone()
     {
-        throw new NotImplementedException();
+        Debug.Log("EnterZone");
     }
 
     public void InjectCard(int index)
