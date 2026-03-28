@@ -11,6 +11,7 @@ public class HandStackCardZone : CardZone
     [SerializeField] List<GameObject> _targets = new();
     [SerializeField] private float xStart;
     [SerializeField] private float xEnd;
+    [SerializeField] private Vector3 selectedOffset;
 
     [SerializeField] private bool _inDrag = false;
 
@@ -127,8 +128,7 @@ public class HandStackCardZone : CardZone
                 xPos += offset / 2;
                 target.transform.rotation = Quaternion.Euler(0, 0, 0);
             };
-            target.transform.position = new Vector3(xPos, transform.position.y,
-                transform.position.z);
+            target.transform.position = new Vector3(xPos, transform.position.y , transform.position.z) + (i == j ? selectedOffset : new Vector3()); 
             _targets.Add(target);
             _cards[i].SetTarget(target.transform);
         }
@@ -145,8 +145,17 @@ public class HandStackCardZone : CardZone
     private int GetNearestIndex(Vector3 worldPosition)
     {
         float x = worldPosition.x;
-        float step = _cards.Count > 1 ? (xEnd - xStart) / (_cards.Count - 1) : transform.position.x;
-        int closestIndex = Mathf.Clamp(Mathf.RoundToInt((x - xStart) / step), 0, _cards.Count - 1);
+        int closestIndex = 0;
+        float closestDistance = Mathf.Infinity;
+        for (int i = 0; i < _targets.Count; i++)
+        {
+            float dist = Mathf.Abs(_targets[i].transform.position.x - x);
+            if (dist < closestDistance)
+            {
+                closestDistance = dist;
+                closestIndex = i;
+            }
+        }
         return closestIndex;
     }
 }

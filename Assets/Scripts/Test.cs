@@ -9,7 +9,7 @@ public class Test : MonoBehaviour
     public void Add()
     {
         var card = Instantiate(_cardPrefab, Vector3.zero, Quaternion.identity);  
-        card.GetComponent<CardVisual>().setUpdated(new CardConfig(4,3,0.65f,2,1,1));
+        card.GetComponent<CardVisual>().setUpdated(ScriptableObject.CreateInstance<CardConfig>());
         _cardZone.CardEnter(card.GetComponent<CardEntity>());
     }
 }
