@@ -5,20 +5,21 @@ using UnityEngine;
 
 public class HandStackCardZone : CardZone
 {
+    public GameObject cardPrefab;
     [SerializeField] private GameObject targetPrefab;
     [SerializeField] List<CardEntity> _cards = new();
     [SerializeField] List<GameObject> _targets = new();
     [SerializeField] private float xStart;
     [SerializeField] private float xEnd;
-    
-    [SerializeField]private bool _inDrag = false;
+
+    [SerializeField] private bool _inDrag = false;
 
     private void Start()
     {
         xStart = transform.position.x - transform.lossyScale.x / 2;
         xEnd = transform.position.x + transform.lossyScale.x / 2;
     }
-    
+
 
     public override Transform GetTransformForCard(CardEntity card)
     {
@@ -48,7 +49,8 @@ public class HandStackCardZone : CardZone
     public override void OnDrag(Vector3 worldPosition)
     {
         _inDrag = true;
-        Debug.Log(worldPosition);
+        Debug.Log(GetNearestIndex(worldPosition));
+        RecalculateWithDraggingOffset(worldPosition);
     }
 
     public override void OnHover(Vector3 worldPosition)
@@ -103,11 +105,48 @@ public class HandStackCardZone : CardZone
         }
     }
 
+    private void RecalculateWithDraggingOffset(Vector3 worldPosition)
+    {
+        int j = GetNearestIndex(worldPosition);
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        _targets.Clear();
+        float offset = cardPrefab.transform.lossyScale.x * 1.5f ;
+        float step = _cards.Count > 1 ? ((xEnd - xStart) - offset) / (_cards.Count - 1) : transform.position.x;
+        for (int i = 0; i < _cards.Count; i++)
+        {
+            var target = Instantiate(targetPrefab, transform);
+            target.transform.localScale = Vector3.one;
+            float xPos = _cards.Count > 1 ? (xStart + i * step) : transform.position.x;
+            if (i > j) xPos += offset;
+            if (i == j)
+            {
+                xPos += offset / 2;
+                target.transform.rotation = Quaternion.Euler(0, 0, 0);
+            };
+            target.transform.position = new Vector3(xPos, transform.position.y,
+                transform.position.z);
+            _targets.Add(target);
+            _cards[i].SetTarget(target.transform);
+        }
+    }
+
     private void ResetPosition()
     {
         for (int i = 0; i < _cards.Count; i++)
         {
             _cards[i].SetTarget(GetTransformForCard(_cards[i]));
         }
+    }
+
+    private int GetNearestIndex(Vector3 worldPosition)
+    {
+        float x = worldPosition.x;
+        float step = _cards.Count > 1 ? (xEnd - xStart) / (_cards.Count - 1) : transform.position.x;
+        int closestIndex = Mathf.Clamp(Mathf.RoundToInt((x - xStart) / step), 0, _cards.Count - 1);
+        return closestIndex;
     }
 }

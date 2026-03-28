@@ -17,7 +17,7 @@ public class CardVisual : MonoBehaviour
     private Renderer cardRenderer;
     private MaterialPropertyBlock propertyBlock;
 
-    void Start()
+    void Awake()
     {
         cardRenderer = GetComponent<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
