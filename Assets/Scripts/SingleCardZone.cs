@@ -9,15 +9,30 @@ public class SingleCardZone : CardZone
         return transform;
     }
 
-    public override void CardEnter(CardEntity card)
+    public override void AddCard(CardEntity card)
     {
         _thisCard = card;
         card.SetTarget(GetTransformForCard(card));
     }
 
+    public override void AddCard(CardEntity card, Vector3 worldPosition)
+    {
+        AddCard(card);
+    }
+
     public override void InjectCard(CardEntity card)
     {
         _thisCard = null;
+    }
+
+    public override void PreInjectCard(CardEntity card)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void PreEnterCard(CardEntity card)
+    {
+        throw new System.NotImplementedException();
     }
 
     public override void OnClick(Vector3 worldPosition)

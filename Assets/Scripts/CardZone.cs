@@ -12,8 +12,11 @@ public abstract class CardZone : MonoBehaviour, IClickable3D
     protected CardEntity _draggedCard;
     
     public abstract Transform GetTransformForCard(CardEntity card);
-    public abstract void CardEnter(CardEntity card);
+    public abstract void AddCard(CardEntity card);
+    public abstract void AddCard(CardEntity card, Vector3 worldPosition);
     public abstract void InjectCard(CardEntity card);
+    public abstract void PreInjectCard(CardEntity card);
+    public abstract void PreEnterCard(CardEntity card);
     //Implements
     public abstract void OnClick(Vector3 worldPosition);
     public abstract void OnDrag(Vector3 worldPosition);

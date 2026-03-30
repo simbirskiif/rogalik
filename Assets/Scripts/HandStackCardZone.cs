@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Exceptions;
 using Interfaces;
 using UnityEngine;
 
@@ -14,11 +15,13 @@ public class HandStackCardZone : CardZone
     [SerializeField] private Vector3 selectedOffset;
 
     [SerializeField] private bool _inDrag = false;
+    [SerializeField] private float edgesOffset = 0f;
+    [SerializeField] private CardEntity selectedCard;
 
     private void Start()
     {
-        xStart = transform.position.x - transform.lossyScale.x / 2;
-        xEnd = transform.position.x + transform.lossyScale.x / 2;
+        xStart = (transform.position.x - transform.lossyScale.x / 2) + edgesOffset;
+        xEnd = (transform.position.x + transform.lossyScale.x / 2) - edgesOffset;
     }
 
 
@@ -28,9 +31,17 @@ public class HandStackCardZone : CardZone
         return _targets[index].transform;
     }
 
-    public override void CardEnter(CardEntity card)
+    public override void AddCard(CardEntity card)
     {
         _cards.Add(card);
+        Recalculate();
+        ResetPosition();
+    }
+
+    public override void AddCard(CardEntity card, Vector3 worldPosition)
+    {
+        int pos = GetNearestIndex(worldPosition) + 1;
+        _cards.Insert(pos > _cards.Count ? 0 : pos, card);
         Recalculate();
         ResetPosition();
     }
@@ -42,9 +53,24 @@ public class HandStackCardZone : CardZone
         ResetPosition();
     }
 
+    public override void PreInjectCard(CardEntity card)
+    {
+        if (_cards.Contains(card))
+        {
+            return;
+        }
+
+        throw new CardZoneException();
+    }
+
+    public override void PreEnterCard(CardEntity card)
+    {
+        
+    }
+
     public override void OnClick(Vector3 worldPosition)
     {
-        Debug.Log(worldPosition);
+        _draggedCard = _cards[GetNearestIndex(worldPosition)];
     }
 
     public override void OnDrag(Vector3 worldPosition)
@@ -56,7 +82,6 @@ public class HandStackCardZone : CardZone
 
     public override void OnHover(Vector3 worldPosition)
     {
-        throw new NotImplementedException();
     }
 
     public override void OnRelease(Vector3 point, IClickable3D clickable)
@@ -65,6 +90,7 @@ public class HandStackCardZone : CardZone
         Recalculate();
         ResetPosition();
         Debug.Log("Release");
+        OnEndDrag?.Invoke(_draggedCard, this, clickable, point);
     }
 
     public override void OnExitZone()
@@ -115,7 +141,7 @@ public class HandStackCardZone : CardZone
         }
 
         _targets.Clear();
-        float offset = cardPrefab.transform.lossyScale.x * 1.5f ;
+        float offset = cardPrefab.transform.lossyScale.x * 1.5f;
         float step = _cards.Count > 1 ? ((xEnd - xStart) - offset) / (_cards.Count - 1) : transform.position.x;
         for (int i = 0; i < _cards.Count; i++)
         {
@@ -127,8 +153,10 @@ public class HandStackCardZone : CardZone
             {
                 xPos += offset / 2;
                 target.transform.rotation = Quaternion.Euler(0, 0, 0);
-            };
-            target.transform.position = new Vector3(xPos, transform.position.y , transform.position.z) + (i == j ? selectedOffset : new Vector3()); 
+            }
+            
+            target.transform.position = new Vector3(xPos, transform.position.y, transform.position.z) +
+                                        (i == j ? selectedOffset : new Vector3());
             _targets.Add(target);
             _cards[i].SetTarget(target.transform);
         }
@@ -141,6 +169,7 @@ public class HandStackCardZone : CardZone
             _cards[i].SetTarget(GetTransformForCard(_cards[i]));
         }
     }
+    
 
     private int GetNearestIndex(Vector3 worldPosition)
     {
@@ -156,6 +185,7 @@ public class HandStackCardZone : CardZone
                 closestIndex = i;
             }
         }
+
         return closestIndex;
     }
 }
