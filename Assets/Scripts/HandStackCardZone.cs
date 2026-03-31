@@ -23,6 +23,7 @@ public class HandStackCardZone : CardZone
         xStart = (transform.position.x - transform.lossyScale.x / 2) + edgesOffset;
         xEnd = (transform.position.x + transform.lossyScale.x / 2) - edgesOffset;
     }
+    
 
 
     public override Transform GetTransformForCard(CardEntity card)
@@ -40,7 +41,7 @@ public class HandStackCardZone : CardZone
 
     public override void AddCard(CardEntity card, Vector3 worldPosition)
     {
-        int pos = GetNearestIndex(worldPosition) + 1;
+        int pos = GetNearestIndex(worldPosition);
         _cards.Insert(pos > _cards.Count ? 0 : pos, card);
         Recalculate();
         ResetPosition();
@@ -70,6 +71,7 @@ public class HandStackCardZone : CardZone
 
     public override void OnClick(Vector3 worldPosition)
     {
+        _isDragging = true;
         _draggedCard = _cards[GetNearestIndex(worldPosition)];
     }
 
@@ -78,24 +80,32 @@ public class HandStackCardZone : CardZone
         _inDrag = true;
         Debug.Log(GetNearestIndex(worldPosition));
         RecalculateWithDraggingOffset(worldPosition);
+        _draggedCard = _cards[GetNearestIndex(worldPosition)];
     }
 
     public override void OnHover(Vector3 worldPosition)
     {
+        RecalculateWithHoverOffset(worldPosition);
     }
 
     public override void OnRelease(Vector3 point, IClickable3D clickable)
     {
+        _isDragging = false;
         _inDrag = false;
         Recalculate();
         ResetPosition();
         Debug.Log("Release");
         OnEndDrag?.Invoke(_draggedCard, this, clickable, point);
+        _draggedCard = null;
     }
 
     public override void OnExitZone()
     {
-        Debug.Log("ExitZone");
+        Recalculate();
+        if (_draggedCard == null) return;
+        {
+            OnBeginDrag.Invoke(_draggedCard, this);
+        }
     }
 
     public override void OnEnterZone()
@@ -135,6 +145,7 @@ public class HandStackCardZone : CardZone
     private void RecalculateWithDraggingOffset(Vector3 worldPosition)
     {
         int j = GetNearestIndex(worldPosition);
+        
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -157,6 +168,32 @@ public class HandStackCardZone : CardZone
             
             target.transform.position = new Vector3(xPos, transform.position.y, transform.position.z) +
                                         (i == j ? selectedOffset : new Vector3());
+            _targets.Add(target);
+            _cards[i].SetTarget(target.transform);
+        }
+    }
+    private void RecalculateWithHoverOffset(Vector3 worldPosition)
+    {
+        int j = GetNearestIndex(worldPosition);
+    
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        _targets.Clear();
+        float offset = cardPrefab.transform.lossyScale.x;
+        float step = _cards.Count > 1 ? ((xEnd - xStart) - offset) / (_cards.Count - 1) : transform.position.x;
+    
+        for (int i = 0; i < _cards.Count; i++)
+        {
+            var target = Instantiate(targetPrefab, transform);
+            target.transform.localScale = Vector3.one;
+        
+            float xPos = _cards.Count > 1 ? (xStart + i * step) : transform.position.x;
+            if (i >= j) xPos += offset; // сдвигаем карты начиная с j, освобождая место
+        
+            target.transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
             _targets.Add(target);
             _cards[i].SetTarget(target.transform);
         }

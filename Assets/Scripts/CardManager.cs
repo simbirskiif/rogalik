@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
+    private Transform _targetTouchPosition;
     [SerializeField] GameObject cardPrefab;
     public List<CardEntity> movementPairs = new List<CardEntity>();
 
@@ -24,11 +25,12 @@ public class CardManager : MonoBehaviour
     private void OnEnable()
     {
         CardZone.OnEndDrag += HandleCardDrop;
+        CardZone.OnBeginDrag += HandleCardBeginDrop;
+        TouchController.OnUpdateTouchPosition +=  HandleChangeTouchPosition;
     }
 
     private void HandleCardDrop(CardEntity card, CardZone zone, IClickable3D target, Vector3 position)
     {
-        Debug.Log("Говно");
         try
         {
             zone.PreInjectCard(card);
@@ -51,4 +53,10 @@ public class CardManager : MonoBehaviour
         }
         
     }
+
+    private void HandleCardBeginDrop(CardEntity card, CardZone zone)
+    {
+        card.SetTarget(_targetTouchPosition);
+    }
+    private void HandleChangeTouchPosition(Transform touchPosition) => _targetTouchPosition = touchPosition;
 }

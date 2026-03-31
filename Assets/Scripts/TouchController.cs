@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class TouchController : MonoBehaviour
 {
+
+    public static Action<Transform> OnUpdateTouchPosition;
+    
     private Camera _camera;
     [SerializeField] private LayerMask _layerMask;
 
     private IClickable3D _current;
     private IClickable3D _last;
     private IClickable3D _first;
+    
+    private Transform _touchPoint;
 
     private void Start()
     {
+        _touchPoint = GameObject.FindGameObjectWithTag("Touch Point").transform;
         _camera = Camera.main;
     }
 
@@ -49,6 +55,13 @@ public class TouchController : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _layerMask))
         {
+            Plane plane = new Plane(Vector3.up, new  Vector3(hit.point.x, 1, hit.point.z));
+            if (plane.Raycast(ray, out float distance))
+            {
+                Vector3 dragPoint = ray.GetPoint(distance);
+                _touchPoint.position = dragPoint;
+                OnUpdateTouchPosition?.Invoke(_touchPoint);
+            }
             var thisHit = hit.collider.GetComponent<IClickable3D>();
             if (_current != hit.collider.GetComponent<IClickable3D>())
             {

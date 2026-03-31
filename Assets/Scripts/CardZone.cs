@@ -10,6 +10,7 @@ public abstract class CardZone : MonoBehaviour, IClickable3D
     public static Action<CardEntity, CardZone, IClickable3D, Vector3> OnEndDrag;
     
     protected CardEntity _draggedCard;
+    protected bool _isDragging;
     
     public abstract Transform GetTransformForCard(CardEntity card);
     public abstract void AddCard(CardEntity card);
